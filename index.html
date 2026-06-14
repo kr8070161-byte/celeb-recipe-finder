@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>셀럽 레시피 트렌드 탐색기</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, '맑은 고딕', sans-serif; background: #f5f5f5; color: #222; padding: 20px; }
+.container { max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+h1 { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #111; }
+.plat-tabs { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 20px; }
+.plat-tab { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 10px; font-size: 13px; font-weight: 500; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; color: #888; background: #f9f9f9; transition: all 0.15s; }
+.plat-tab.active { background: #fff; color: #111; border-color: #888; font-weight: 600; }
+.section { display: none; }
+.section.active { display: block; }
+.row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+select, input[type=text] { flex: 1; min-width: 150px; padding: 8px 10px; font-size: 14px; border: 1px solid #ddd; border-radius: 8px; background: #fff; }
+.btn-primary { padding: 8px 20px; font-size: 14px; background: #2563eb; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
+.btn-primary:hover { background: #1d4ed8; }
+.pill-group { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+.pill-label { font-size: 13px; color: #888; }
+.pill { font-size: 12px; padding: 4px 12px; border-radius: 20px; cursor: pointer; background: #f0f0f0; color: #666; border: 1px solid #e0e0e0; }
+.pill.active { background: #fff; color: #111; border-color: #888; font-weight: 600; }
+#status { font-size: 13px; color: #888; margin-bottom: 10px; min-height: 20px; }
+.video-card { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border: 1px solid #eee; border-radius: 10px; margin-bottom: 8px; background: #fff; transition: border-color 0.15s; }
+.video-card:hover { border-color: #ccc; }
+.rank { font-size: 16px; font-weight: 600; color: #aaa; min-width: 24px; text-align: center; padding-top: 3px; }
+.rank.top3 { color: #f59e0b; }
+.video-thumb { width: 80px; height: 60px; border-radius: 6px; object-fit: cover; flex-shrink: 0; }
+.video-info { flex: 1; min-width: 0; }
+.video-title { font-size: 13px; font-weight: 500; color: #111; margin-bottom: 6px; line-height: 1.4; cursor: pointer; text-decoration: none; display: block; }
+.video-title:hover { color: #2563eb; }
+.meta { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.meta-item { font-size: 12px; color: #888; }
+.badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
+.badge-green { background: #d1fae5; color: #065f46; }
+.badge-yellow { background: #fef3c7; color: #92400e; }
+.badge-gray { background: #f0f0f0; color: #666; }
+.channel { font-size: 11px; color: #bbb; margin-top: 3px; }
+.link-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.link-card { display: flex; gap: 12px; align-items: center; padding: 14px; border: 1px solid #eee; border-radius: 10px; cursor: pointer; text-decoration: none; color: inherit; transition: all 0.15s; }
+.link-card:hover { border-color: #ccc; background: #fafafa; }
+.link-icon { font-size: 22px; }
+.link-card-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.link-card-desc { font-size: 12px; color: #888; }
+.info-box { padding: 12px 16px; background: #f8f8f8; border-radius: 8px; font-size: 13px; color: #666; margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📱 셀럽 레시피 트렌드 탐색기</h1>
+
+  <div class="plat-tabs">
+    <div class="plat-tab active" onclick="setPlat('yt')">▶ 유튜브 Shorts</div>
+    <div class="plat-tab" onclick="setPlat('tt')">♪ 틱톡 트렌드</div>
+    <div class="plat-tab" onclick="setPlat('ig')">◎ 인스타 탐색</div>
+  </div>
+
+  <!-- 유튜브 섹션 -->
+  <div id="yt-section" class="section active">
+    <div class="row">
+      <select id="keyword-select">
+        <option value="홍진경 레시피">홍진경 레시피</option>
+        <option value="최화정 레시피">최화정 레시피</option>
+        <option value="연예인 다이어트 레시피">연예인 다이어트 레시피</option>
+        <option value="핫한 연예인 레시피">핫한 연예인 레시피</option>
+        <option value="배우 식단 레시피">배우 식단 레시피</option>
+        <option value="외국에서 난리난 레시피">외국에서 난리난 레시피</option>
+        <option value="바이럴 레시피">바이럴 레시피</option>
+        <option value="다이어트 음료 만들기">다이어트 음료 만들기</option>
+        <option value="디톡스 주스 만들기">디톡스 주스 만들기</option>
+        <option value="살빠지는 음료">살빠지는 음료</option>
+      </select>
+      <input type="text" id="custom-keyword" placeholder="직접 입력..." />
+      <button class="btn-primary" onclick="doSearch()">검색</button>
+    </div>
+
+    <div class="pill-group">
+      <span class="pill-label">기간:</span>
+      <span class="pill active" onclick="setPeriod('week')" id="p-week">1주일</span>
+      <span class="pill" onclick="setPeriod('month')" id="p-month">1개월</span>
+      <span class="pill" onclick="setPeriod('3month')" id="p-3month">3개월</span>
+      <span class="pill" onclick="setPeriod('all')" id="p-all">전체</span>
+    </div>
+
+    <div class="pill-group">
+      <span class="pill-label">정렬:</span>
+      <span class="pill active" onclick="sortBy('ratio')" id="sort-ratio">댓글비율 ↑</span>
+      <span class="pill" onclick="sortBy('views')" id="sort-views">조회수 ↑</span>
+      <span class="pill" onclick="sortBy('comments')" id="sort-comments">댓글수 ↑</span>
+      <span class="pill" onclick="sortBy('recent')" id="sort-recent">최신순</span>
+    </div>
+
+    <div id="status"></div>
+    <div id="results"></div>
+  </div>
+
+  <!-- 틱톡 섹션 -->
+  <div id="tt-section" class="section">
+    <p style="font-size:14px; color:#666; margin-bottom:16px;">틱톡 공식 크리에이티브 센터에서 카테고리별 인기 영상을 무료로 볼 수 있어요.</p>
+    <div class="link-grid">
+      <a class="link-card" href="https://ads.tiktok.com/business/creativecenter/inspiration/popular/pc/ko" target="_blank">
+        <div class="link-icon">📈</div>
+        <div><div class="link-card-title">인기 영상 트렌드</div><div class="link-card-desc">지금 한국에서 뜨는 영상</div></div>
+      </a>
+      <a class="link-card" href="https://ads.tiktok.com/business/creativecenter/hashtag/pc/ko" target="_blank">
+        <div class="link-icon">#️⃣</div>
+        <div><div class="link-card-title">인기 해시태그</div><div class="link-card-desc">음식/레시피 카테고리 필터</div></div>
+      </a>
+      <a class="link-card" href="https://ads.tiktok.com/business/creativecenter/song/pc/ko" target="_blank">
+        <div class="link-icon">🎵</div>
+        <div><div class="link-card-title">인기 음악</div><div class="link-card-desc">바이럴 배경음악 파악</div></div>
+      </a>
+      <a class="link-card" href="https://ads.tiktok.com/business/creativecenter/inspiration/topads/pc/ko" target="_blank">
+        <div class="link-icon">🏆</div>
+        <div><div class="link-card-title">Top 광고 영상</div><div class="link-card-desc">잘 만든 제품 소개 참고용</div></div>
+      </a>
+    </div>
+    <div class="info-box">💡 음식 카테고리 필터 → 한국 → 7일 설정 추천</div>
+  </div>
+
+  <!-- 인스타 섹션 -->
+  <div id="ig-section" class="section">
+    <p style="font-size:14px; color:#666; margin-bottom:16px;">인스타 해시태그 탐색 페이지로 바로 이동해요. 인기 게시물 탭 기준으로 확인하세요.</p>
+    <div class="link-grid">
+      <a class="link-card" href="https://www.instagram.com/explore/" target="_blank">
+        <div class="link-icon">🔍</div>
+        <div><div class="link-card-title">탐색 페이지</div><div class="link-card-desc">지금 인기 릴스 모음</div></div>
+      </a>
+      <a class="link-card" href="https://www.instagram.com/explore/tags/%EB%8B%A4%EC%9D%B4%EC%96%B4%ED%8A%B8%EB%A0%88%EC%8B%9C%ED%94%BC/" target="_blank">
+        <div class="link-icon">#️⃣</div>
+        <div><div class="link-card-title">#다이어트레시피</div><div class="link-card-desc">인기 게시물 탐색</div></div>
+      </a>
+      <a class="link-card" href="https://www.instagram.com/explore/tags/%EC%97%B0%EC%98%88%EC%9D%B8%EB%A0%88%EC%8B%9C%ED%94%BC/" target="_blank">
+        <div class="link-icon">#️⃣</div>
+        <div><div class="link-card-title">#연예인레시피</div><div class="link-card-desc">셀럽 레시피 릴스</div></div>
+      </a>
+      <a class="link-card" href="https://www.instagram.com/explore/tags/%EB%B0%94%EC%9D%B4%EB%9F%B4%EB%A0%88%EC%8B%9C%ED%94%BC/" target="_blank">
+        <div class="link-icon">#️⃣</div>
+        <div><div class="link-card-title">#바이럴레시피</div><div class="link-card-desc">외국에서 난리난 것들</div></div>
+      </a>
+    </div>
+    <div class="info-box">💡 인기 게시물 탭 기준으로 보시면 좋아요·댓글 많은 순으로 정렬돼요.</div>
+  </div>
+</div>
+
+<script>
+const API_KEY = 'AIzaSyCGxKbCXRQ4tGvsUKv4psppmOdtsPaMxA8';
+let allVideos = [];
+let currentSort = 'ratio';
+let currentPeriod = 'week';
+
+function setPlat(p) {
+  document.querySelectorAll('.plat-tab').forEach((t,i) => {
+    t.classList.remove('active');
+    ['yt','tt','ig'].forEach(x => document.getElementById(x+'-section').classList.remove('active'));
+  });
+  document.querySelectorAll('.plat-tab')[['yt','tt','ig'].indexOf(p)].classList.add('active');
+  document.getElementById(p+'-section').classList.add('active');
+}
+
+function setPeriod(p) {
+  currentPeriod = p;
+  document.querySelectorAll('[id^="p-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('p-'+p).classList.add('active');
+}
+
+function sortBy(type) {
+  currentSort = type;
+  document.querySelectorAll('[id^="sort-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('sort-'+type).classList.add('active');
+  renderResults();
+}
+
+function getPublishedAfter() {
+  const now = new Date();
+  if (currentPeriod === 'week') now.setDate(now.getDate() - 7);
+  else if (currentPeriod === 'month') now.setMonth(now.getMonth() - 1);
+  else if (currentPeriod === '3month') now.setMonth(now.getMonth() - 3);
+  else return null;
+  return now.toISOString();
+}
+
+function formatNum(n) {
+  if (n >= 10000) return (n/10000).toFixed(1) + '만';
+  if (n >= 1000) return (n/1000).toFixed(1) + '천';
+  return n.toString();
+}
+
+function formatDate(s) {
+  const d = new Date(s);
+  return `${d.getMonth()+1}/${d.getDate()}`;
+}
+
+function getBadge(r) {
+  if (r >= 2) return `<span class="badge badge-green">댓글비율 ${r.toFixed(2)}%</span>`;
+  if (r >= 0.5) return `<span class="badge badge-yellow">댓글비율 ${r.toFixed(2)}%</span>`;
+  return `<span class="badge badge-gray">댓글비율 ${r.toFixed(2)}%</span>`;
+}
+
+async function doSearch() {
+  const custom = document.getElementById('custom-keyword').value.trim();
+  const keyword = custom || document.getElementById('keyword-select').value;
+  const after = getPublishedAfter();
+
+  document.getElementById('status').textContent = `"${keyword}" 검색 중...`;
+  document.getElementById('results').innerHTML = '';
+  allVideos = [];
+
+  try {
+    let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(keyword+' #shorts')}&type=video&videoDuration=short&maxResults=20&regionCode=KR&relevanceLanguage=ko&order=viewCount&key=${API_KEY}`;
+    if (after) url += `&publishedAfter=${encodeURIComponent(after)}`;
+
+    const sd = await (await fetch(url)).json();
+    if (!sd.items?.length) { document.getElementById('status').textContent = '결과 없음. 기간을 넓혀보세요.'; return; }
+
+    const ids = sd.items.map(i => i.id.videoId).join(',');
+    const vd = await (await fetch(`https://www.googleapis.com/youtube/v3/videos?part=statistics,snippet&id=${ids}&key=${API_KEY}`)).json();
+
+    allVideos = vd.items.map(v => {
+      const s = v.statistics || {};
+      const views = parseInt(s.viewCount||0);
+      const comments = parseInt(s.commentCount||0);
+      return { id: v.id, title: v.snippet.title, channel: v.snippet.channelTitle, publishedAt: v.snippet.publishedAt, thumb: v.snippet.thumbnails?.medium?.url, views, comments, ratio: views > 0 ? comments/views*100 : 0 };
+    }).filter(v => v.views > 0);
+
+    renderResults();
+    const pl = {week:'1주일',month:'1개월','3month':'3개월',all:'전체'}[currentPeriod];
+    document.getElementById('status').textContent = `${allVideos.length}개 영상 · "${keyword}" · ${pl}`;
+  } catch(e) {
+    document.getElementById('status').textContent = '오류: ' + e.message;
+  }
+}
+
+function renderResults() {
+  const sorted = [...allVideos].sort((a,b) => {
+    if (currentSort==='ratio') return b.ratio-a.ratio;
+    if (currentSort==='views') return b.views-a.views;
+    if (currentSort==='comments') return b.comments-a.comments;
+    return new Date(b.publishedAt)-new Date(a.publishedAt);
+  });
+  document.getElementById('results').innerHTML = sorted.map((v,i) => `
+    <div class="video-card">
+      <div class="rank ${i<3?'top3':''}">${i+1}</div>
+      ${v.thumb ? `<img class="video-thumb" src="${v.thumb}" />` : ''}
+      <div class="video-info">
+        <a class="video-title" href="https://youtube.com/shorts/${v.id}" target="_blank">${v.title}</a>
+        <div class="meta">
+          <span class="meta-item">👁 ${formatNum(v.views)}</span>
+          <span class="meta-item">💬 ${formatNum(v.comments)}</span>
+          ${getBadge(v.ratio)}
+          <span class="meta-item">📅 ${formatDate(v.publishedAt)}</span>
+        </div>
+        <div class="channel">${v.channel}</div>
+      </div>
+    </div>
+  `).join('');
+}
+</script>
+</body>
+</html>
